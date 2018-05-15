@@ -52,6 +52,16 @@ public class Shader {
 		glUniformMatrix4fv(getUniformLocation(name), false, buffer);
 	}
 	
+	public void setUniform(String name, int a, int b, int c) {
+		bind();
+		glUniform3i(getUniformLocation(name), a, b, c);
+	}
+	
+	public void setUniform(String name, float a, float b, float c) {
+		bind();
+		glUniform3f(getUniformLocation(name), a, b, c);
+	}
+	
 	public void unbind() {
 		glUseProgram(0);
 	}
@@ -75,5 +85,5 @@ public class Shader {
 		if(status.get(0) == GL_FALSE) {
 			System.err.println("Error compiling shader:\n" + glGetShaderInfoLog(shader));
 		}
-	}
+	}	
 }

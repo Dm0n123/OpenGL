@@ -14,6 +14,7 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 
 import com.jack.lwjgl.engine.DataType;
+import com.jack.lwjgl.engine.Time;
 import com.jack.lwjgl.engine.graphics.Shader;
 import com.jack.lwjgl.engine.graphics.buffers.IndexBuffer;
 import com.jack.lwjgl.engine.graphics.buffers.VertexArray;
@@ -21,9 +22,9 @@ import com.jack.lwjgl.engine.graphics.buffers.VertexBuffer;
 
 public class Main {
 	
-	private static long window;
-	private static int screenWidth = 800;
-	private static int screenHeight = 600;
+	public static long window;
+	private static int screenWidth = 1280;
+	private static int screenHeight = 720;
 	private static VertexBuffer vbo;
 	private static Shader shader;
 	private static VertexArray vao;
@@ -32,13 +33,13 @@ public class Main {
 	
 	
 	public static float vertices[] = {
-			100f,100f, 1f,0.5f,0.5f, // x,y
-			300f,100f, 1f,0.5f,1f,
-			300f,300f, 1f,0.5f,1f,
-			100f,300f, 1f,0.5f,1f,
-			600f,500f, 1f,0f,0f,
-			550f,400f, 0f,1f,0f,
-			500f,500f, 0f,0f,1f
+			100f,100f, // x,y
+			300f,100f,
+			300f,300f,
+			100f,300f,
+			600f,500f, 
+			550f,400f,
+			500f,500f
 			
 	};  
 	
@@ -75,7 +76,7 @@ public class Main {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
-		window = glfwCreateWindow(640, 480, "LWJGL", 0, 0);
+		window = glfwCreateWindow(screenWidth, screenHeight, "LWJGL", 0, 0);
 		if(window == NULL) {
 			throw new RuntimeException("Failed to create GLFW window");
 		}
@@ -99,7 +100,6 @@ public class Main {
 		glViewport(0,0,screenWidth,screenHeight);
 		
 		glfwSetFramebufferSizeCallback(window, new GLFWFramebufferSizeCallback() {
-			
 			@Override
 			public void invoke(long window, int width, int height) {
 				screenWidth = width;
@@ -108,7 +108,7 @@ public class Main {
 			}
 		});
 		
-		glfwSwapInterval(1);
+		glfwSwapInterval();
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -119,16 +119,18 @@ public class Main {
 		
 		vao = new VertexArray(vbo, ebo);
 		vao.push(DataType.FLOAT, 2);
-		vao.push(DataType.FLOAT, 3);
+//		vao.push(DataType.FLOAT, 3);
 		
 		
 		shader = new Shader("src/com/jack/lwjgl/engine/graphics/shader/shaders/shader.vs","src/com/jack/lwjgl/engine/graphics/shader/shaders/shader.fs");
 		
 		shader.setUniform("projection", projection);
+		shader.setUniform("vertexColor", 1f, 0.5f, 1f);
 		
 	}
 	
 	public static void loop() {
+		Time.updateFps();
 		glClearColor(0.2f, 0.3f, 0.3f, 1f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
